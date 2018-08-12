@@ -2,6 +2,7 @@
 ini_set('display_errors', 1);	//1 - показывать ошибки, 0 - скрывать
 error_reporting(E_ALL);
 class RegAuth extends CI_Controller
+//class RegAuth extends Secure_Control
 {
     public function __construct()
     {
@@ -11,12 +12,14 @@ class RegAuth extends CI_Controller
     public function index()
     {
         $logIn = $this->RegAuth_model->LI();
+        //$logIn = $this->LI();
         $this->load->view('/regAuth/index', $logIn);
 
     }
     public function page2()
     {
         $logIn = $this->RegAuth_model->LI();
+        //$logIn = $this->LI();
         $this->load->view('/regAuth/page2', $logIn);
     }
     public function ra($a = 'e')                                        //процесс авторизации и регистрации

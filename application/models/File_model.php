@@ -35,29 +35,27 @@ class File_model extends CI_Model
         $rez['file'] = $mas;
         return $rez;
     }
-    public function delFile($userID, $fileID)
+    public function delFile($fileID)
     {
-        if ($userID == $_SESSION['id']) {                       //проверка пользователя
-            $this->db->where('id', $fileID);                    //получение задачи пользователя
-            $query = $this->db->get('file');
-            $mas = $query->result_array();
-            if (!empty($mas[0])) {                              //проверка: получена ли задача?
-                if ($mas[0]['userID'] == $userID) {             //проверка: получена задача данного пользователя?
-                    $this->db->where('id', $fileID);
-                    $query = $this->db->delete('file');         //запрос на удаление
-                    if ($query == 1) {                          //проверка: выполнено ли удаление?
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
+        $this->db->where('id', $fileID);                    //получение файлов пользователя
+        $query = $this->db->get('file');
+        $mas = $query->result_array();
+        if (empty($mas[0])) {                              //проверка: получен ли файл?
+			return false;
+		}
+        $adr = $mas[0]['adres'];
+        unlink($adr);
+//                echo "<pre>";
+//                print_r($mas);
+//                exit();
+        if ($mas[0]['userID'] != $_SESSION['id']) {             //проверка: получен файл данного пользователя?
+			return false;
+		}
+        $this->db->where('id', $fileID);
+        $query = $this->db->delete('file');         //запрос на удаление
+        if ($query != 1) {                          //проверка: выполнено ли удаление?
             return false;
-        }
+		}
+        return true;
     }
 }

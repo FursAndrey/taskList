@@ -36,25 +36,19 @@ class Task_model extends CI_Model
 
     public function delTask($userID, $taskID)
     {
-        if ($userID == $_SESSION['id']) {                       //проверка пользователя
-            $this->db->where('id', $taskID);                    //получение задачи пользователя
-            $query = $this->db->get('task');
-            $mas = $query->result_array();
-            if (!empty($mas[0])) {                              //проверка: получена ли задача?
-                if ($mas[0]['userID'] == $userID) {             //проверка: получена задача данного пользователя?
-                    $this->db->where('id', $taskID);
-                    $query = $this->db->delete('task');         //запрос на удаление
-                    if ($query == 1) {                          //проверка: выполнено ли удаление?
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+        $this->db->where('id', $taskID);                    //получение задачи пользователя
+        $query = $this->db->get('task');
+        $mas = $query->result_array();
+        if (empty($mas[0])) {                              //проверка: получена ли задача?
+			return false;
+		}
+        if ($mas[0]['userID'] != $userID) {             //проверка: получена задача данного пользователя?
+			return false;
+		}
+        $this->db->where('id', $taskID);
+        $query = $this->db->delete('task');         //запрос на удаление
+        if ($query == 1) {                          //проверка: выполнено ли удаление?
+            return true;
         } else {
             return false;
         }
@@ -96,9 +90,9 @@ class Task_model extends CI_Model
                 if ($mas[0]['userID'] == $userID) {             //проверка: получена задача данного пользователя?
                     $this->db->where('id', $taskID);
                     $data = array(
-                        'headTask' => $headTask,
-                        'textTask' => $textTask,
-                        'deadLine' => $deadLine
+						'headTask' => $headTask,
+						'textTask' => $textTask,
+						'deadLine' => $deadLine
                     );
                     $rez = $this->db->update('task', $data);
                     return $rez;

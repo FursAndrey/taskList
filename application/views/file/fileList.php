@@ -12,6 +12,7 @@ error_reporting(E_ALL);
     <body>
         <p><a href="/regAuth/page2">Ссылка на 2-ю страницу</a></p>
         <p>Привет, <?=$login?></p>
+        <p><a href="/File">Добавить файл</a></p>
         <p><a href="/RegAuth/logOut">Выход</a></p>
         <div id="box1">
             <?
@@ -24,7 +25,7 @@ error_reporting(E_ALL);
                     <p><a href="/<?=$mas['adres']?>" download><?=$mas['name']?></a></p>
                     <p>Размер файла: <?echo round($mas['size']/1000000,2)?> МБ</p>
                     <p >Владелец файла: <?=$mas['login']?></p>
-                    <p><a href="/File/fileDel/<?=$mas['userID']?>/<?=$mas['id']?>">Удалить файл</a></p>
+                    <p><a href="/File/fileDel/<?=$mas['id']?>">Удалить файл</a></p>
                 </div>
             <?}?>
         </div>

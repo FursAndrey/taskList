@@ -15,7 +15,7 @@ class File extends CI_Controller
         if($_FILES != []){
             $fileName = md5($_FILES['file']['name'] . time());						//назначение уникального имени
             $endNameFile = explode('.', $_FILES['file']['name']);				//получение расширения
-            $structure = 'img/' . $fileName[0] . '/';									//подготовка директории для записи файла
+            $structure = 'load/' . $fileName[0] . '/';									//подготовка директории для записи файла
             if(!file_exists($structure)){												//проверить наличие папки, если нету - создать
                 mkdir($structure, 0777, true);							//создание папки
             }
@@ -41,9 +41,9 @@ class File extends CI_Controller
 //        print_r($rez);
         $this->load->view('/file/fileList', $rez);
     }
-    public function fileDel($userID, $fileID){
-        if(!empty($userID) && !empty($fileID)){
-            $del = $this->File_model->delFile($userID, $fileID);
+    public function fileDel($fileID){
+        if(!empty($fileID)){
+            $del = $this->File_model->delFile($fileID);
             if($del == true){
                 $this->fileList();
             }
