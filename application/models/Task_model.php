@@ -34,7 +34,7 @@ class Task_model extends CI_Model
         }
     }
 
-    public function delTask($userID, $taskID)
+    public function delTask($taskID)
     {
         $this->db->where('id', $taskID);                    //получение задачи пользователя
         $query = $this->db->get('task');
@@ -42,7 +42,7 @@ class Task_model extends CI_Model
         if (empty($mas[0])) {                              //проверка: получена ли задача?
 			return false;
 		}
-        if ($mas[0]['userID'] != $userID) {             //проверка: получена задача данного пользователя?
+        if ($mas[0]['userID'] != $_SESSION['id']) {             //проверка: получена задача данного пользователя?
 			return false;
 		}
         $this->db->where('id', $taskID);
@@ -81,22 +81,20 @@ class Task_model extends CI_Model
         }
     }
 
-    public function updateTask($taskID, $userID, $headTask, $textTask, $deadLine){
-        if ($userID == $_SESSION['id']) {                       //проверка пользователя
-            $this->db->where('id', $taskID);                    //получение задачи пользователя
-            $query = $this->db->get('task');
-            $mas = $query->result_array();
-            if (!empty($mas[0])) {                              //проверка: получена ли задача?
-                if ($mas[0]['userID'] == $userID) {             //проверка: получена задача данного пользователя?
-                    $this->db->where('id', $taskID);
-                    $data = array(
-						'headTask' => $headTask,
-						'textTask' => $textTask,
-						'deadLine' => $deadLine
-                    );
-                    $rez = $this->db->update('task', $data);
-                    return $rez;
-                }
+    public function updateTask($taskID, $headTask, $textTask, $deadLine){
+        $this->db->where('id', $taskID);                    //получение задачи пользователя
+        $query = $this->db->get('task');
+        $mas = $query->result_array();
+        if (!empty($mas[0])) {                              //проверка: получена ли задача?
+            if ($mas[0]['userID'] == $_SESSION['id']) {             //проверка: получена задача данного пользователя?
+                $this->db->where('id', $taskID);
+                $data = array(
+                    'headTask' => $headTask,
+                    'textTask' => $textTask,
+                    'deadLine' => $deadLine
+                );
+                $rez = $this->db->update('task', $data);
+                return $rez;
             }
         }
         return 0;

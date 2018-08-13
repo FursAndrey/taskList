@@ -43,11 +43,6 @@ class File_model extends CI_Model
         if (empty($mas[0])) {                              //проверка: получен ли файл?
 			return false;
 		}
-        $adr = $mas[0]['adres'];
-        unlink($adr);
-//                echo "<pre>";
-//                print_r($mas);
-//                exit();
         if ($mas[0]['userID'] != $_SESSION['id']) {             //проверка: получен файл данного пользователя?
 			return false;
 		}
@@ -56,6 +51,10 @@ class File_model extends CI_Model
         if ($query != 1) {                          //проверка: выполнено ли удаление?
             return false;
 		}
-        return true;
+		else{
+            $adr = $mas[0]['adres'];
+            unlink($adr);
+            return true;
+        }
     }
 }

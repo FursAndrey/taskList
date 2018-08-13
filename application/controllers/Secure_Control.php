@@ -6,12 +6,11 @@ class Secure_Control extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-    //    $this->load->model('Task_model');
     }
     public function index(){
-        
+
 	}
-	public function LI(){
+	protected function LI(){
         $auth = 0;
         if(!empty($_SESSION['id'])){
             $auth = 1;

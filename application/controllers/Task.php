@@ -1,7 +1,8 @@
 <?
 ini_set('display_errors', 1);	//1 - показывать ошибки, 0 - скрывать
 error_reporting(E_ALL);
-class Task extends CI_Controller
+require_once ('Secure_Control.php');
+class Task extends Secure_Control
 {
     public function __construct()
     {
@@ -15,18 +16,21 @@ class Task extends CI_Controller
         $rez = $this -> Task_model -> showTask();
         $this->load->view('/task/taskList', $rez);
     }
-    public function taskDel($userID, $taskID){
-        if(!empty($userID) && !empty($taskID)){
-            $del = $this->Task_model->delTask($userID, $taskID);
-            if($del == true){
-                $this->taskList();
+    public function taskDel($taskID){
+        $logIn = $this->LI();
+        if($logIn['auth']){
+            if(!empty($taskID)){
+                $del = $this->Task_model->delTask($taskID);
+                if($del == true){
+                    $this->taskList();
+                }
+                else{
+//                $this->taskList();
+                }
             }
             else{
-//                $this->taskList();
-            }
-        }
-        else{
 //            $this->taskList();
+            }
         }
     }
 
@@ -47,43 +51,43 @@ class Task extends CI_Controller
 		return $rez;
 	}
     public function taskIns(){
-		$mas = $this->defData();
-		$headTask = $mas['head'];
-		$textTask = $mas['text'];
-		$deadLine = $mas['deadLine'];
-        $rez = $this -> Task_model -> insertTask($headTask,$textTask,$deadLine);
-    //    $rez = $this -> Task_model -> insertTask($mas);
-        if($rez == 1){
-            $this->taskList();
-        }
-        else{
-
+        $logIn = $this->LI();
+        if($logIn['auth']){
+            $mas = $this->defData();
+            $headTask = $mas['head'];
+            $textTask = $mas['text'];
+            $deadLine = $mas['deadLine'];
+            $rez = $this -> Task_model -> insertTask($headTask,$textTask,$deadLine);
+            //    $rez = $this -> Task_model -> insertTask($mas);
+            if($rez == 1){
+                $this->taskList();
+            }
         }
     }
 	
-	public function taskUpdate($userID, $taskID){
-		if($this->input->method(TRUE) == 'GET'){
-			$rez = $this -> Task_model -> selTask($taskID);
-			$data = [
-				'taskID' => $taskID,
-				'userID' => $userID,
-				'rez' => $rez
-				];
-			$this->load->view('/task/taskUpdate', $data);
-		}
-		else if($this->input->method(TRUE) == 'POST'){
-			$mas = $this->defData();
-			$headTask = $mas['head'];
-			$textTask = $mas['text'];
-			$deadLine = $mas['deadLine'];
-			$rez = $this -> Task_model -> updateTask($taskID, $userID, $headTask, $textTask, $deadLine);
-		//	$rez = $this -> Task_model -> updateTask($taskID, $userID, $mas);
-			if($rez == 1){
-				$this->taskList();
-			}
-			else{
-
-			}
-		}
+	public function taskUpdate($taskID){
+        $logIn = $this->LI();
+        if($logIn['auth']){
+            if($this->input->method(TRUE) == 'GET'){
+                $rez = $this -> Task_model -> selTask($taskID);
+                $data = [
+                    'taskID' => $taskID,
+                    'userID' => $rez['userID'],
+                    'rez' => $rez
+                ];
+                $this->load->view('/task/taskUpdate', $data);
+            }
+            else if($this->input->method(TRUE) == 'POST'){
+                $mas = $this->defData();
+                $headTask = $mas['head'];
+                $textTask = $mas['text'];
+                $deadLine = $mas['deadLine'];
+                $rez = $this -> Task_model -> updateTask($taskID, $headTask, $textTask, $deadLine);
+                //	$rez = $this -> Task_model -> updateTask($taskID, $userID, $mas);
+                if($rez == 1){
+                    $this->taskList();
+                }
+            }
+        }
 	}
 }

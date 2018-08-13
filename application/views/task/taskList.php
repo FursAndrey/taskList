@@ -25,8 +25,8 @@ error_reporting(E_ALL);
                 <? $deadLine = date('d-m-Y',$mas['deadLine']); ?>
                 <time>Срок: <?=$deadLine?></time>
                 <p><?=$mas['textTask']?></p>
-                <div class="red"><a href="/Task/taskUpdate/<?=$mas['userID']?>/<?=$mas['id']?>">Редактировать</a></div>
-                <div class="del"><a href="/Task/taskDel/<?=$mas['userID']?>/<?=$mas['id']?>">X</a></div>
+                <div class="red"><a href="/Task/taskUpdate/<?=$mas['id']?>">Редактировать</a></div>
+                <div class="del"><a href="/Task/taskDel/<?=$mas['id']?>">X</a></div>
             </div>
         <?}?>
         </div>
