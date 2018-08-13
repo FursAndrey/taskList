@@ -38,9 +38,6 @@ class File extends Secure_Control
                 }
             }
         }
-        else{
-
-        }
     }
     public function fileList(){
         $logIn = $this->LI();
@@ -48,10 +45,6 @@ class File extends Secure_Control
             $rez = $this -> File_model -> showFile();
             $this->load->view('/file/fileList', $rez);
         }
-        else{
-
-        }
-
     }
     public function fileDel($fileID){
         if(!empty($fileID)){
@@ -65,12 +58,6 @@ class File extends Secure_Control
                     $this->fileList();
                 }
             }
-            else{
-
-            }
-        }
-        else{
-
         }
     }
 }

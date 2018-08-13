@@ -24,12 +24,6 @@ class Task extends Secure_Control
                 if($del == true){
                     $this->taskList();
                 }
-                else{
-//                $this->taskList();
-                }
-            }
-            else{
-//            $this->taskList();
             }
         }
     }
@@ -58,7 +52,6 @@ class Task extends Secure_Control
             $textTask = $mas['text'];
             $deadLine = $mas['deadLine'];
             $rez = $this -> Task_model -> insertTask($headTask,$textTask,$deadLine);
-            //    $rez = $this -> Task_model -> insertTask($mas);
             if($rez == 1){
                 $this->taskList();
             }
@@ -83,7 +76,6 @@ class Task extends Secure_Control
                 $textTask = $mas['text'];
                 $deadLine = $mas['deadLine'];
                 $rez = $this -> Task_model -> updateTask($taskID, $headTask, $textTask, $deadLine);
-                //	$rez = $this -> Task_model -> updateTask($taskID, $userID, $mas);
                 if($rez == 1){
                     $this->taskList();
                 }

@@ -6,15 +6,16 @@ class Secure_Control extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('session');
     }
     public function index(){
 
 	}
 	protected function LI(){
         $auth = 0;
-        if(!empty($_SESSION['id'])){
+        if($this->session->userdata('id') != NULL){
             $auth = 1;
-            $this->db->where('id', $_SESSION['id']);
+            $this->db->where('id', $this->session->id);
             $query = $this->db->get('users');
         }
         $logIn = [

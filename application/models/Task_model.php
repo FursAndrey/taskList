@@ -9,17 +9,17 @@ class Task_model extends CI_Model
     {
         parent::__construct();
         $this->load->database();
-        session_start();
+        $this->load->library('session');
     }
 
     public function showTask()
     {
-        if (!empty($_SESSION['id'])) {
-            $this->db->where('id', $_SESSION['id']);                //получение данных пользователя
+        if ($this->session->userdata('id') != NULL) {
+            $this->db->where('id', $this->session->userdata('id'));                //получение данных пользователя
             $this->db->select('login');
             $query = $this->db->get('users');
             $rez['login'] = $query->result_array()[0]['login'];
-            $this->db->where('userID', $_SESSION['id']);            //получение списка задач пользователя
+            $this->db->where('userID', $this->session->userdata('id'));            //получение списка задач пользователя
             $query = $this->db->get('task');
             $mas = [];
             foreach ($query->result() as $row)                      //подготовка списка задач к выводу
@@ -27,9 +27,6 @@ class Task_model extends CI_Model
                 $mas[] = $row;
             }
             $rez['task'] = $mas;
-//            echo '<pre>';
-//            print_r($rez);
-//            exit();
             return $rez;
         }
     }
@@ -42,7 +39,7 @@ class Task_model extends CI_Model
         if (empty($mas[0])) {                              //проверка: получена ли задача?
 			return false;
 		}
-        if ($mas[0]['userID'] != $_SESSION['id']) {             //проверка: получена задача данного пользователя?
+        if ($mas[0]['userID'] != $this->session->userdata('id')) {             //проверка: получена задача данного пользователя?
 			return false;
 		}
         $this->db->where('id', $taskID);
@@ -59,7 +56,7 @@ class Task_model extends CI_Model
             'headTask' => $headTask,
             'textTask' => $textTask,
             'deadLine' => $deadLine,
-            'userID' => $_SESSION['id']
+            'userID' => $this->session->userdata('id')
         );
         return $this->db->insert('task', $data);
     }
@@ -86,7 +83,7 @@ class Task_model extends CI_Model
         $query = $this->db->get('task');
         $mas = $query->result_array();
         if (!empty($mas[0])) {                              //проверка: получена ли задача?
-            if ($mas[0]['userID'] == $_SESSION['id']) {             //проверка: получена задача данного пользователя?
+            if ($mas[0]['userID'] == $this->session->userdata('id')) {             //проверка: получена задача данного пользователя?
                 $this->db->where('id', $taskID);
                 $data = array(
                     'headTask' => $headTask,

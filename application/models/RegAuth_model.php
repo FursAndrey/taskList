@@ -7,27 +7,11 @@ class RegAuth_model extends CI_Model
     {
         parent::__construct();
         $this->load->database();
-        session_start();
-    }
-    public function LI(){
-        $auth = 0;
-        if(!empty($_SESSION['id'])){
-            $auth = 1;
-            $this->db->where('id', $_SESSION['id']);
-            $query = $this->db->get('users');
-        }
-        $logIn = [
-            'auth' => $auth
-        ];
-        if($auth){
-            $login = $query -> result_array()[0]['login'];
-            $logIn['login'] = $login;
-        }
-        return $logIn;
+        $this->load->library('session');
     }
     public function logOut()
     {
-        if(!empty($_SESSION['id'])){
+        if($this->session->userdata('id') != NULL){
             session_destroy();
             return true;
         }
@@ -39,13 +23,16 @@ class RegAuth_model extends CI_Model
                 $this->db->where('login', $this->input->post('login')); //подготовка запроса в базу
                 $query = $this->db->get('users');                       //поиск в базе введенного логина
                 if (!empty($query->result_array()[0])) {                //если логин существует в базе
-                    $pass = md5($_POST['pass']);                        //хеш пароля
+                    $pass = md5($this->input->post('pass'));                        //хеш пароля
                                                                         //если пароль пользователя совпадает с паролем из базы - авторизация
                     if ($query->result_array()[0]['login'] == $this->input->post('login') && $query->result_array()[0]['password'] == $pass) {
-                        $_SESSION['id'] = $query->result_array()[0]['id'];
+                        $data = [
+                        'id' => $query->result_array()[0]['id']
+                            ];
+                        $this->session->set_userdata($data);
                         return true;
                     }                                                   //если нет - ошибка
-                    if ($query->result_array()[0]['login'] != $_POST['login'] || $query->result_array()[0]['password'] != $pass) {
+                    if ($query->result_array()[0]['login'] != $this->input->post('login') || $query->result_array()[0]['password'] != $pass) {
                         return false;
                     }
                 } else {                                                //если логин в базе не найден - ошибка
@@ -69,7 +56,10 @@ class RegAuth_model extends CI_Model
                     if(!empty($query)) {
                         if($query == 1) {                                   //если данные добавлены
                             if (!empty($this->db->insert_id())) {           //сохранить ИД пользователя и авториовать
-                                $_SESSION['id'] = $this->db->insert_id();
+                                $data = [
+                                    'id' => $this->db->insert_id()
+                                ];
+                                $this->session->set_userdata($data);
                                 return true;
                             }
                         }

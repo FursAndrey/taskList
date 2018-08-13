@@ -7,19 +7,19 @@ class File_model extends CI_Model
     {
         parent::__construct();
         $this->load->database();
-        session_start();
+        $this->load->library('session');
     }
     public function insertFile($adres,$name,$size){
         $data = array(
             'adres' => $adres,
             'name' => $name,
             'size' => $size,
-            'userID' => $_SESSION['id']
+            'userID' => $this->session->userdata('id')
         );
         return $this->db->insert('file', $data);
     }
     public function showFile(){
-        $this->db->where('id', $_SESSION['id']);                //получение данных пользователя
+        $this->db->where('id', $this->session->userdata('id'));                //получение данных пользователя
         $this->db->select('login');
         $query = $this->db->get('users');
         $rez['login'] = $query->result_array()[0]['login'];
@@ -43,7 +43,7 @@ class File_model extends CI_Model
         if (empty($mas[0])) {                              //проверка: получен ли файл?
 			return false;
 		}
-        if ($mas[0]['userID'] != $_SESSION['id']) {             //проверка: получен файл данного пользователя?
+        if ($mas[0]['userID'] != $this->session->userdata('id')) {             //проверка: получен файл данного пользователя?
 			return false;
 		}
         $this->db->where('id', $fileID);
