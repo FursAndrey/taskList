@@ -38,12 +38,24 @@ class File extends Secure_Control
                 }
             }
         }
+        else{
+            $data = [
+                'auth' => 0
+            ];
+            $this->load->view('/regAuth/index', $data);
+        }
     }
     public function fileList(){
         $logIn = $this->LI();
         if($logIn['auth']){
             $rez = $this -> File_model -> showFile();
             $this->load->view('/file/fileList', $rez);
+        }
+        else{
+            $data = [
+                'auth' => 0
+            ];
+            $this->load->view('/regAuth/index', $data);
         }
     }
     public function fileDel($fileID){
@@ -57,6 +69,12 @@ class File extends Secure_Control
                 else{
                     $this->fileList();
                 }
+            }
+            else{
+                $data = [
+                    'auth' => 0
+                ];
+                $this->load->view('/regAuth/index', $data);
             }
         }
     }

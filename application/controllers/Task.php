@@ -12,7 +12,7 @@ class Task extends Secure_Control
     public function index(){
         
     }
-    public function taskList(){
+    private function taskList(){
         $rez = $this -> Task_model -> showTask();
         $this->load->view('/task/taskList', $rez);
     }
@@ -25,6 +25,12 @@ class Task extends Secure_Control
                     $this->taskList();
                 }
             }
+        }
+        else{
+            $data = [
+                'auth' => 0
+            ];
+            $this->load->view('/regAuth/index', $data);
         }
     }
 
@@ -56,6 +62,12 @@ class Task extends Secure_Control
                 $this->taskList();
             }
         }
+        else{
+            $data = [
+                'auth' => 0
+            ];
+            $this->load->view('/regAuth/index', $data);
+        }
     }
 	
 	public function taskUpdate($taskID){
@@ -80,6 +92,12 @@ class Task extends Secure_Control
                     $this->taskList();
                 }
             }
+        }
+        else{
+            $data = [
+                'auth' => 0
+            ];
+            $this->load->view('/regAuth/index', $data);
         }
 	}
 }

@@ -14,21 +14,19 @@ class Task_model extends CI_Model
 
     public function showTask()
     {
-        if ($this->session->userdata('id') != NULL) {
-            $this->db->where('id', $this->session->userdata('id'));                //получение данных пользователя
-            $this->db->select('login');
-            $query = $this->db->get('users');
-            $rez['login'] = $query->result_array()[0]['login'];
-            $this->db->where('userID', $this->session->userdata('id'));            //получение списка задач пользователя
-            $query = $this->db->get('task');
-            $mas = [];
-            foreach ($query->result() as $row)                      //подготовка списка задач к выводу
-            {
-                $mas[] = $row;
-            }
-            $rez['task'] = $mas;
-            return $rez;
+        $this->db->where('id', $this->session->userdata('id'));                //получение данных пользователя
+        $this->db->select('login');
+        $query = $this->db->get('users');
+        $rez['login'] = $query->result_array()[0]['login'];
+        $this->db->where('userID', $this->session->userdata('id'));            //получение списка задач пользователя
+        $query = $this->db->get('task');
+        $mas = [];
+        foreach ($query->result() as $row)                      //подготовка списка задач к выводу
+        {
+            $mas[] = $row;
         }
+        $rez['task'] = $mas;
+        return $rez;
     }
 
     public function delTask($taskID)
